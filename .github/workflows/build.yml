@@ -6,6 +6,15 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
+  build-play:
+    name: Build Play framework
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+        fetch-depth: 0
+      - name: build
+        run: ant -buildfile ./framework/build.xml test
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
@@ -13,6 +22,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
